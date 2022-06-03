@@ -1,25 +1,45 @@
+import _has from 'lodash/has';
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/Home.vue';
+import Main from '@/views/Main.vue';
+import Today from '@/views/Today.vue';
+
+const title = 'ToDoList: ';
 
 const routes = [
   {
-    path: '/',
     name: 'Home',
-    component: Home,
+    path: '/',
+    component: Main,
+    meta: {
+      title: `${title} Главная`,
+    },
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    name: 'Incoming',
+    path: '/incoming',
+    component: Main,
+    meta: {
+      title: `${title} Входящие`,
+    },
+  },
+  {
+    name: 'Today',
+    path: '/today',
+    component: Today,
+    meta: {
+      title: `${title} Сегодня`,
+    },
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (_has(to.meta, 'title')) document.title = to.meta.title;
+  next();
 });
 
 export default router;
